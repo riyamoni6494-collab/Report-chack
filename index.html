@@ -1,1 +1,340 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamiul Security Lab</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151c2c;
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --btn-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --text-color: #e2e8f0;
+            --border-color: #2a3447;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding: 15px; }
+
+        .container { max-width: 850px; margin: 0 auto; }
+
+        .header-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .arabic-header { font-size: 20px; color: #38ef7d; font-weight: bold; margin-bottom: 5px; }
+        .arabic-sub { font-size: 13px; color: #94a3b8; margin-bottom: 15px; }
+        
+        .profile-pic { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #00f2fe; margin: 10px auto; box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); object-fit: cover; display: block; }
+        
+        .glowing-notice { background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); color: #e2e8f0; padding: 15px; border-radius: 12px; margin: 15px 0; font-size: 14px; text-align: center; }
+        
+        .contact-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; margin: 5px; transition: transform 0.2s; font-size: 14px; }
+        .contact-btn:hover { transform: translateY(-2px); }
+
+        .toolkit-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .tool-title { text-align: center; font-size: 22px; margin-bottom: 20px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-btn { flex: 1; min-width: 90px; padding: 10px 8px; background: #1e293b; border: 1px solid var(--border-color); color: #94a3b8; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; }
+        .tab-btn.active { background: var(--accent-gradient); color: #fff; border-color: transparent; }
+
+        .tool-content { display: none; }
+        .tool-content.active { display: block; }
+
+        label { font-size: 13px; color: #94a3b8; display: block; margin-bottom: 6px; }
+        input, textarea { width: 100%; padding: 12px 15px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 15px; outline: none; transition: border-color 0.3s; }
+        input:focus, textarea:focus { border-color: #00f2fe; }
+
+        .btn-action { width: 100%; padding: 12px; background: var(--accent-gradient); border: none; border-radius: 8px; color: #fff; font-size: 15px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
+        .btn-action:hover { opacity: 0.9; }
+        
+        .btn-success { background: var(--btn-success); }
+        .btn-copy-all { width: 100%; padding: 10px; background: #eab308; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+
+        .table-responsive { overflow-x: auto; margin-top: 15px; }
+        .result-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+        .result-table th { background: #1e293b; padding: 10px; color: #94a3b8; border-bottom: 1px solid var(--border-color); }
+        .result-table td { padding: 10px; border-bottom: 1px solid var(--border-color); }
+
+        .btn-copy-sm { background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3); color: #00f2fe; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s; float: right; }
+        .btn-copy-sm:hover { background: #00f2fe; color: #000; }
+
+        .status-box { display: flex; justify-content: space-between; background: #0f172a; padding: 12px; border-radius: 8px; margin-top: 15px; font-weight: bold; }
+        .status-live { color: #38ef7d; }
+        .status-dead { color: #ff4757; }
+
+        .footer-text { text-align: center; font-size: 13px; color: #64748b; margin-top: 30px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header-card">
+        <div class="arabic-header">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+        <div class="arabic-sub">অর্থ, আল্লাহর নামে শুরু করিলাম তিনি অসীম করুনাময় এবং দয়ালু।</div>
+        
+        <img alt="Jamiul Security Lab" class="profile-pic" src="profile.jpg"/>
+        <h2>Jamiul Security Lab</h2>
+        
+        <div class="glowing-notice">
+            এখানে সততার সাথে কাজ করে দিনে ৪০০ থেকে ৫০০ টাকা ইনকাম করতে পারবেন। দেরি না করে এখনই আমাদের সাথে যোগাযোগ করে কাজ শুরু করুন।
+        </div>
+
+        <div>
+            <a class="contact-btn" href="https://wa.me/8801707590497" target="_blank">
+                WhatsApp: 01707590497
+            </a>
+            <a class="contact-btn" href="https://t.me/TheEarningZone2" style="background: #209cee;" target="_blank">
+                Join Telegram
+            </a>
+        </div>
+    </div>
+
+    <div class="toolkit-card">
+        <h3 class="tool-title">Pro Utility Toolkit</h3>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="openTool(event, 'nameSection')">Name Gen</button>
+            <button class="tab-btn" onclick="openTool(event, 'gmailSection')">Gmail Gen</button>
+            <button class="tab-btn" onclick="openTool(event, 'passSection')">Pass Gen</button>
+            <button class="tab-btn" onclick="openTool(event, 'uidSection')">UID Extract</button>
+        </div>
+
+        <div class="tool-content active" id="nameSection">
+            <label>কতগুলো নাম তৈরি করতে চান?</label>
+            <input id="nameCount" max="1000" min="1" type="number" value="10"/>
+            <button class="btn-action" onclick="generateNames()">Generate Names</button>
+            <div class="table-responsive" id="nameResult"></div>
+        </div>
+
+        <div class="tool-content" id="gmailSection">
+            <label>কতগুলো জিমেইল তৈরি করতে চান?</label>
+            <input id="gmailCount" max="1000" min="1" type="number" value="10"/>
+            <button class="btn-action" onclick="generateGmails()">Generate Gmails</button>
+            <div class="table-responsive" id="gmailResult"></div>
+        </div>
+
+        <div class="tool-content" id="passSection">
+            <label>মূল শব্দ (Base Password)</label>
+            <input id="basePass" type="text" value="jamiul"/>
+            <button class="btn-action" onclick="generatePass()">Generate Passwords</button>
+            <div class="table-responsive" id="passResult"></div>
+        </div>
+
+        <div class="tool-content" id="uidSection">
+            <label>ফেসবুক কুকি দিন:</label>
+            <textarea id="cookieInput" placeholder="এখানে কুকি পেস্ট করুন..."></textarea>
+            <button class="btn-action" onclick="extractUIDs()">Extract UID</button>
+            <button class="btn-copy-all" id="copyAllUidBtn" onclick="copyAllUIDs(this)">📋 Copy All UIDs</button>
+            <div class="table-responsive" id="uidResult"></div>
+        </div>
+    </div>
+
+    <div class="toolkit-card">
+        <h3 class="tool-title">FB Duplicate Data Cleaner</h3>
+        <label>UID|Password|Cookie ফরম্যাটে ডেটা দিন:</label>
+        <textarea id="inputData" placeholder="10001234|Pass|Cookie..."></textarea>
+        <button class="btn-action" onclick="processData()">ডুপ্লিকেট রিমুভ করুন</button>
+
+        <div id="cleanerStats" style="margin-top: 10px; font-size: 13px; color: #94a3b8;"></div>
+        <textarea id="cleanerResult" placeholder="ইউনিক ডেটা এখানে দেখতে পাবেন..." readonly style="margin-top:10px; height: 100px;"></textarea>
+        <button class="btn-action btn-success" onclick="copyResult('cleanerResult')">ফলাফল কপি করুন</button>
+    </div>
+
+    <div class="toolkit-card">
+        <h3 class="tool-title">Live UID Checker</h3>
+        <label>ইউআইডি সমুহ প্রদান করুন (প্রতি লাইনে একটি):</label>
+        <textarea id="uidInput" placeholder="100087654321..."></textarea>
+        <button class="btn-action" onclick="checkStatus()">চেক করুন</button>
+        <button class="btn-copy-all" id="copyLiveBtn" onclick="copyAllLive()" style="background:#38ef7d; color:#000;">Copy All Live 📋</button>
+        
+        <div id="countArea"></div>
+        <div class="table-responsive" id="resultArea"></div>
+    </div>
+
+    <div class="footer-text">
+        Developed &amp; Maintained by <strong>Jamiul Security Lab</strong>
+    </div>
+
+</div>
+
+<script>
+    let extractedUidList = "";
+    let liveUids = [];
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYokTDIGbJfXfTsn7pwtjWKB9TlkCHaXwr0q2gaMDVvyx1E8fgujO_CJhJMskU-YtaXyRKkctTcHGz/pub?gid=0&single=true&output=csv";
+
+    window.onload = function() {
+        generateNames();
+        generateGmails();
+    };
+
+    function openTool(evt, toolName) {
+        let content = document.getElementsByClassName("tool-content");
+        for (let i = 0; i < content.length; i++) content[i].style.display = "none";
+        let tabs = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+        document.getElementById(toolName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+    }
+
+    function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            let original = btn.innerText;
+            btn.innerText = "✓ Copied";
+            setTimeout(() => { btn.innerText = original; }, 1500);
+        }).catch(() => {
+            alert('কপি করা সম্ভব হয়নি!');
+        });
+    }
+
+    function generateNames() {
+        let count = Math.min(document.getElementById('nameCount').value || 10, 1000);
+        let fNames = ["Jamiul", "Arif", "Sabbir", "Anika", "Tasnim", "Rakib", "Fahim", "Nabila"];
+        let lNames = ["Khan", "Islam", "Hasan", "Rahman", "Akter", "Uddin", "Ali", "Hossain"];
+        let html = '<table class="result-table"><thead><tr><th>First Name</th><th>Last Name</th></tr></thead><tbody>';
+        for(let i=0; i<count; i++) {
+            let fn = fNames[i % fNames.length], ln = lNames[i % lNames.length];
+            html += '<tr><td>' + fn + ' <button class="btn-copy-sm" onclick="copyToClipboard(\'' + fn + '\', this)">Copy</button></td><td>' + ln + ' <button class="btn-copy-sm" onclick="copyToClipboard(\'' + ln + '\', this)">Copy</button></td></tr>';
+        }
+        document.getElementById('nameResult').innerHTML = html + '</tbody></table>';
+    }
+
+    function generateGmails() {
+        let count = Math.min(document.getElementById('gmailCount').value || 10, 1000);
+        let chars = "abcdefghijklmnopqrstuvwxyz";
+        let html = '<table class="result-table"><thead><tr><th>Gmail</th><th>Action</th></tr></thead><tbody>';
+        for(let i=0; i<count; i++) {
+            let user = Array.from({length:10}, () => chars[Math.floor(Math.random()*26)]).join('');
+            let email = user + "@gmail.com";
+            html += '<tr><td>' + email + '</td><td><button class="btn-copy-sm" onclick="copyToClipboard(\'' + email + '\', this)">Copy</button></td></tr>';
+        }
+        document.getElementById('gmailResult').innerHTML = html + '</tbody></table>';
+    }
+
+    function generatePass() {
+        let base = document.getElementById('basePass').value || "jamiul";
+        let d = new Date().getDate();
+        let passes = [base + d, base + "@" + d, base + "#" + d, base + "2026"];
+        let html = '<table class="result-table"><thead><tr><th>Password</th><th>Action</th></tr></thead><tbody>';
+        passes.forEach(p => { 
+            html += '<tr><td>' + p + '</td><td><button class="btn-copy-sm" onclick="copyToClipboard(\'' + p + '\', this)">Copy</button></td></tr>'; 
+        });
+        document.getElementById('passResult').innerHTML = html + '</tbody></table>';
+    }
+
+    function extractUIDs() {
+        let input = document.getElementById('cookieInput').value;
+        let matches = input.match(/c_user=(\d+)/g);
+        let html = '<table class="result-table"><thead><tr><th>UID</th><th>Action</th></tr></thead><tbody>';
+        let copyAllBtn = document.getElementById('copyAllUidBtn');
+        
+        if(matches && matches.length > 0) {
+            let uidArray = [];
+            matches.forEach(m => { 
+                let uid = m.split('=')[1]; 
+                uidArray.push(uid);
+                html += '<tr><td>' + uid + '</td><td><button class="btn-copy-sm" onclick="copyToClipboard(\'' + uid + '\', this)">Copy</button></td></tr>'; 
+            });
+            extractedUidList = uidArray.join('\n');
+            copyAllBtn.style.display = "block";
+        } else {
+            html += '<tr><td colspan="2" style="text-align:center; color:#ff4757;">কোনো UID পাওয়া যায়নি!</td></tr>';
+            extractedUidList = "";
+            copyAllBtn.style.display = "none";
+        }
+        document.getElementById('uidResult').innerHTML = html + '</tbody></table>';
+    }
+
+    function copyAllUIDs(btn) {
+        if(extractedUidList) copyToClipboard(extractedUidList, btn);
+    }
+
+    function processData() {
+        let input = document.getElementById('inputData').value;
+        let lines = input.split(/\r?\n/); 
+        let uniqueMap = new Map();
+        let duplicatesCount = 0;
+
+        lines.forEach(line => {
+            let trimmedLine = line.trim();
+            if (trimmedLine === "") return;
+            let parts = trimmedLine.split('|');
+            let uid = parts[0] ? parts[0].trim() : "";
+
+            if (uid !== "") {
+                if (!uniqueMap.has(uid)) {
+                    uniqueMap.set(uid, trimmedLine);
+                } else {
+                    duplicatesCount++;
+                }
+            }
+        });
+
+        let finalArray = Array.from(uniqueMap.values());
+        document.getElementById('cleanerResult').value = finalArray.join('\n');
+        document.getElementById('cleanerStats').innerText = "মোট ইউনিক আইডি: " + finalArray.length + " | ডুপ্লিকেট সরানো হয়েছে: " + duplicatesCount;
+    }
+
+    function copyResult(targetId) {
+        let text = document.getElementById(targetId).value;
+        if(text) {
+            navigator.clipboard.writeText(text).then(() => alert("সফলভাবে কপি হয়েছে!"));
+        }
+    }
+
+    async function checkStatus() {
+        const input = document.getElementById('uidInput').value;
+        const resultArea = document.getElementById('resultArea');
+        const countArea = document.getElementById('countArea');
+        const copyBtn = document.getElementById('copyLiveBtn');
+        
+        if (!input.trim()) {
+            resultArea.innerHTML = "<p style='color:#ff4757; text-align:center;'>অনুগ্রহ করে কিছু UID প্রদান করুন!</p>";
+            copyBtn.style.display = "none";
+            return;
+        }
+
+        resultArea.innerHTML = "<p style='text-align:center;'>ডেটা প্রসেস হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</p>";
+        countArea.innerHTML = "";
+        copyBtn.style.display = "none";
+        liveUids = [];
+
+        try {
+            const response = await fetch(sheetUrl);
+            const data = await response.text();
+            
+            const inputIds = input.split('\n').map(id => id.trim()).filter(id => id !== "");
+            let liveCount = 0, deadCount = 0;
+            let html = "<table class='result-table'><thead><tr><th>UID</th><th>Status</th></tr></thead><tbody>";
+            const sheetLines = data.split('\n').map(line => line.trim());
+            
+            inputIds.forEach(cleanId => {
+                const isLive = sheetLines.some(line => line === cleanId);
+                if (isLive) {
+                    liveCount++;
+                    liveUids.push(cleanId);
+                } else {
+                    deadCount++;
+                }
+                
+                html += '<tr><td>' + cleanId + '</td><td><span class="' + (isLive ? 'status-live' : 'status-dead') + '">' + (isLive ? 'LIVE ✅' : 'DEAD ❌') + '</span></td></tr>';
+            });
+            
+            html += "</tbody></table>";
+            countArea.innerHTML = "<div class='status-box'><span class='status-live'>LIVE: " + liveCount + "</span><span class='status-dead'>DEAD: " + deadCount + "</span></div>";
+            resultArea.innerHTML = html;
+
+            if (liveCount > 0) copyBtn.style.display = "block";
+        } catch (error) {
+            resultArea.innerHTML = "<p style='color:#ff4757; text-align:center;'>ডাটাবেজ কানেক্ট করা সম্ভব হয়নি। আবার চেষ্টা করুন!</p>";
+        }
+    }
+
+    function copyAllLive() {
+        if (liveUids.length === 0) return;
+        navigator.clipboard.writeText(liveUids.join('\n')).then(() => alert("সব Live UID কপি করা হয়েছে!"));
+    }
+</script>
+
+</body>
+  </html>
